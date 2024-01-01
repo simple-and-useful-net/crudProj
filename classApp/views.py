@@ -69,6 +69,11 @@ class PersonalCreate(CreateView):
     form_class = PersonalDataForm
     success_url = reverse_lazy('list_url')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['label_suffix'] = ''
+        return kwargs    
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["title"] = "登録"
