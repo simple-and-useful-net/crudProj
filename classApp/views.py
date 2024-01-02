@@ -11,84 +11,92 @@ from .models import PersonalDataModel
 from .forms import  PersonalDataForm 
 
 def make_context( md, ctx ):
-        
-        labels= PersonalDataForm.LABELS
+    
+    # ラベル名の取得
+    labels= PersonalDataForm.LABELS
 
-        # インスタンスの各フィールドの値を取得
-        fields = md._meta.get_fields()
-        objcect2 =[]
+    # フィールドの取得
+    fields = md._meta.get_fields()
 
-        for field in fields:
-            field_name = field.name
-            field_value = getattr( ctx["object"], field_name)
-            print(f"{field_name}: {field_value}")
+    # テンプレートファイルの引数
+    obj =[]
 
-            lbl_name = ""
-            if field_name in labels:       
-                lbl_name = labels[field_name]
+    for field in fields:
+        # フィード情報の取得
+        field_name = field.name
+        field_value = getattr( ctx["object"], field_name)
+        print( f"{field_name}= {field_value}" )
 
-            value = field_value
-            if type(value) is list:
-                value = "、".join(value)
-                
-            objcect2.append( {"name": lbl_name, "value":value})
-        
-        ctx["obj2"] = objcect2
-        return ctx
+        # フィード名からラベル名に変換
+        lbl_name = ""
+        if field_name in labels:       
+            lbl_name = labels[field_name]
 
+        # データ型がlistなら、漢字カンマ区切に変換
+        value = field_value
+        if type(value) is list:
+            value = "、".join(value)
+            
+        obj.append( {"name": lbl_name, "value":value})
+    
+    
+    ctx["object2"] = obj
+    return ctx
+
+
+# テンプレートのファイル名は、モデル名の小文字_???
+# ???_list.html
+# ???_detail.html
+# ???_confirm_delete.html
+# ???_form.html
 
 class PersonalList( ListView ):
     model = PersonalDataModel 
-    # テンプレートは、PersonalDataModel_list.html
 
 class PersonalDetail( DetailView ):
     model = PersonalDataModel 
-    # テンプレートは、PersonalDataModel_detail.html
 
     def get_context_data(self, **kwargs):
-
         ctx = super().get_context_data(**kwargs)
         ctx =make_context( PersonalDataModel, ctx )
         return ctx
 
 class PersonalDelete( DeleteView ): 
     model = PersonalDataModel
-    # テンプレートは、PersonalDataModel_confirm_delete.html
     success_url = reverse_lazy('list_url')
 
     def get_context_data(self, **kwargs):
-
         ctx = super().get_context_data(**kwargs)
         ctx =make_context( PersonalDataModel, ctx )
         return ctx
 
 
-# テンプレートは、PersonalDataModel_form.html
 class PersonalCreate(CreateView):
     model = PersonalDataModel 
     form_class = PersonalDataForm
     success_url = reverse_lazy('list_url')
+    extra_context = {'title': '登録'}
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['label_suffix'] = ''
         return kwargs    
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["title"] = "登録"
-        return ctx
+    # def get_context_data(self, **kwargs):
+    #     ctx = super().get_context_data(**kwargs)
+    #     ctx["title"] = "登録"
+    #     return ctx
 
-# テンプレートは、PersonalDataModel_form.html
 class PersonalUpdate(UpdateView):
     model = PersonalDataModel 
     form_class = PersonalDataForm
     success_url = reverse_lazy('list_url')
+    extra_context = {'title': '修正'}
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["title"] = "修正"
-        return ctx
+    # def get_context_data(self, **kwargs):
+    #     ctx = super().get_context_data(**kwargs)
+    #     ctx["title"] = "修正"
+    #     return ctx
 
 
 

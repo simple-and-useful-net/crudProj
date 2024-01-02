@@ -1,38 +1,39 @@
 
-start
+{% comment %}
+<!-- 検証１（objectはイテレーティブか？） -->
+検証１
 <table class ="table">
-    {% for fld in form %}    
+    {% for fld in object %}    
         <tr>
             <td>{{ fld.label }}</td>
             <td>{{ fld }}</td>
         </tr>
     {% endfor %}
 </table>
-end
 
-start2
+<!-- 検証１（object.フィールド.label はあるか？） -->
+検証2
 <table class="table">
     <tr>
         <td>名前</td>
         <td>{{ object.name.label }}</td>
         <td>{{ object.name }}</td>
     </tr>
-    <tr>
-        <td>性別</td>
-        <td>{{ object.sex.label }}</td>
-        <td>{{ object.sex }}</td>
-    </tr>
 </table>
-end2
+end検証2
+{% endcomment %}
+
 
 <table class="table">
-    {% for fld in obj2 %}    
+    {% for fld in object2 %}    
         <tr>
             <td>{{ fld.name }}</td>
             <td>{{ fld.value}}</td>
         </tr>
     {% endfor %}
 </table>
+
+
 
 {% comment %}
     <table class="table">

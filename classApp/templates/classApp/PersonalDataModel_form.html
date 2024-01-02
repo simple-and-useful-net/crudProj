@@ -1,4 +1,4 @@
-{% extends 'classApp\base.html' %}
+{% extends 'classApp/base.html' %}
 
 {% block title %}
     {{ title }}（個人情報）
@@ -8,6 +8,7 @@
     <!-- エラー表示 -->
     {{ form.errors }}
 
+    {% comment %}    
     <hr>
     <h2>as_p</h2>
     {{form.as_p |cut:"<div>"|cut:"</div>" }}
@@ -25,10 +26,11 @@
         {{form.as_table |cut:"<div>"|cut:"</div>" }}
         {# {{form.as_table }} #}
     </table>
+    {% endcomment %}    
 
 
 
-    <!-- ブラウザーの検証を無効にするので novalidate属性     -->
+    <!-- ブラウザーの検証を無効にするので novalidate属性を指定     -->
     <form method="POST" novalidate>
         {% csrf_token %}
 
